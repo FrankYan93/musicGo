@@ -17,7 +17,12 @@
 ## Dependency
 ## new
 
-## Corpus information (1000 songs from Hdf5 file)
+##
+getCorpus.py:  get raw information from hdf5 file   ==> raw_music_corpus.json
+getlyrics.py: get lyrics information according to train data.txt file  ==> music_corpus.json
+mxm.py: get lyrics information and genre information using API to MXM website ==> new_music_corpus.json
+
+## Corpus format (1000 songs from Hdf5 file)
 {"1":{
     msdID: string,
     trackID: string,
