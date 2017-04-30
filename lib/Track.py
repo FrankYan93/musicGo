@@ -23,16 +23,14 @@ text_anl = analyzer('text',
 )
 
 
-
-
 class Track(DocType):
     title = Text(analyzer=text_anl)
     lyric = Text(analyzer=text_anl)
-    singer = Text(
+    artist = Text(
         analyzer=name_anl,
         fields={'star': Text()}
     )
-    genre = Text(
+    genreabs = Text(
         analyzer=cat_anl,
         fields={'raw': Text()}
     )
@@ -41,9 +39,12 @@ class Track(DocType):
 
     class Meta:
         index = 'music'
+        doc_type = 'track'
 
-    def get_text(self):
-        return self.text
+    def save(self, ** kwargs):
+        return super(Track, self).save(** kwargs)
+
+
 
 
 if __name__ == '__main__':
@@ -58,20 +59,17 @@ if __name__ == '__main__':
         number_of_replicas=0
     )
 
-    # register a doc_type with the index
-    music.doc_type(Track)
-
     # delete the index, ignore if it doesn't exist
-    # music.delete(ignore=404)
+    music.delete(ignore=404)
 
     # create the index in elasticsearch
     # movies.create()
     Track.init()
 
-    test = Track(title = 'test', text = 'Hello World!!!')
+    test = Track(title = 'test', lyric = 'Hello World!!!')
     test.meta.id = 1
-    print type(test), test, test.get_text()
+    print type(test), test, test.title
     test.save()
 
     test2 = Track.get(id=1)
-    print type(test2), test2, test2.get_text()
+    print type(test2), test2, test2.title
