@@ -9,6 +9,7 @@ from math import *
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.connections import connections
 from elasticsearch_dsl.query import Q
+from music import *
 with open('music_corpus.json', 'r') as opened:
     the_corpus = json.loads(opened.read())
 corpusSize = len(the_corpus)
@@ -69,32 +70,20 @@ def newQuery(request):
     session['recentResultIds'] = None
     try:
         query_string = request.form['query'].strip()
-        starring_string = request.form['starring'].strip()
+        artist_string = request.form['artist'].strip()
         genre_string = request.form['genre'].strip()
-        minRuntime_string = request.form['minRuntime'].strip()
-        maxRuntime_string = request.form['maxRuntime'].strip()
     except KeyError:
         print "key error? It should not happen!"
     print "query_string:", query_string
-    print "starring_string:", starring_string
+    print "artist_string:", artist_string
     print "genre_string:", genre_string
-    print "minRuntime_string", minRuntime_string
-    print "maxRuntime_string", maxRuntime_string
-    if minRuntime_string:
-        minRuntime = int(minRuntime_string)
-    else:
-        minRuntime = 0
-    if maxRuntime_string:
-        maxRuntime = int(maxRuntime_string)
-    else:
-        maxRuntime = 9999  # I don't think a movie can be longer than this.
     query_terms = []
     query_stop_words = []
     weight = {}
     invalidList = []
     splitedQuery = query_string.split("\"")
     myQueryDict = {}
-    search = Film.search()
+    search = Music.search()
     for i in range(len(splitedQuery)):
         if i % 2 == 1:
             myQueryDict[i] = {
@@ -116,13 +105,11 @@ def newQuery(request):
         if splitedQuery[i]:
             search = search.query(Q(myQueryDict[i]))
 
-    qs = Q('match', starring={'query': starring_string})
-    if starring_string:
+    qs = Q('match', artist={'query': artist_string})
+    if artist_string:
         search = search.query(qs)
     if genre_string:
         search = search.filter('match', genres={'query': genre_string})
-    search = search.filter(
-        'range', **{"runtime": {"from": minRuntime, "to": maxRuntime}})
     search = search[:corpusSize + 1]  # limit size
     search = search.highlight("*", fragment_size=99999999,
                               pre_tags='<z>', post_tags='</z>')
@@ -142,7 +129,7 @@ def newQuery(request):
         results[-1][1]['title'] = Markup(results[-1][1]['title'])
         session['recentResultIds'].append(e['_id'])
         session['resultScore'].append(e['_score'])
-    starring_query = []
+    artist_query = []
     resultLen = len(results)
     print "resultLen:", resultLen
     if resultLen == 0:
