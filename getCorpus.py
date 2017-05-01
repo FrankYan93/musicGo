@@ -50,7 +50,7 @@ def main():
 
     pp.pprint(music)
 
-    with open('music_corpus.json', 'w') as fp:
+    with open('raw_music_corpus.json', 'w') as fp:
         json.dump(music, fp, indent=4)
 
 if __name__ == '__main__':
