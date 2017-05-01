@@ -15,6 +15,17 @@
 ## Resources
 ## Functionality
 ## Dependency
+- hdf5
+- Cython
+- Flask
+- PyTables
+- elasticsearch_dsl
+- elasticsearch
+- flask_paginate
+- json
+- math
+- re
+
 ## new
 
 ##
