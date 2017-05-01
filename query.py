@@ -9,8 +9,9 @@ from math import *
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.connections import connections
 from elasticsearch_dsl.query import Q
-from music import *
-with open('music_corpus.json', 'r') as opened:
+from lib.Track import *
+from lib.Search import *
+with open('new_music_corpus.json', 'r') as opened:
     the_corpus = json.loads(opened.read())
 corpusSize = len(the_corpus)
 connections.create_connection(hosts=['localhost'])
@@ -83,7 +84,7 @@ def newQuery(request):
     invalidList = []
     splitedQuery = query_string.split("\"")
     myQueryDict = {}
-    search = Music.search()
+    search = Track.search()
     for i in range(len(splitedQuery)):
         if i % 2 == 1:
             myQueryDict[i] = {
