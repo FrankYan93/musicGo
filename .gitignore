@@ -1,2 +1,9 @@
 .DS_STORE
 *.pyc
+
+display_song.py
+mxm_779k_matches.txt
+mxm_dataset_test.txt
+mxm_dataset_train.txt
+raw_music_corpus.json
+new_music_corpus.json
