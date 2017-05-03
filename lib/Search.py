@@ -2,12 +2,12 @@ import json
 import re
 from lib.Track import *
 
-def build_qurey(title, artist, genre, album, lyric):
+def build_qurey(description, artist, genre, album):
     # build description query if exists
-    if (len(lyric) > 0):
+    if (len(description) > 0):
         q = Q("bool",
             must=[
-            Q("multi_match", query=lyric, fields=['title', 'text'], operator='and'),
+            Q("multi_match", query=description, fields=['title', 'lyric'], operator='and'),
             ],
         )
         s = s.query(q)

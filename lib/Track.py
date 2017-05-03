@@ -24,25 +24,23 @@ text_anl = analyzer('text',
 
 
 class Track(DocType):
-    trackID = Keyword()
+    track_id = Keyword()
     title = Text(analyzer=text_anl)
     lyric = Text(analyzer=text_anl)
-    artistName = Text(
-        analyzer=name_anl,
-        fields={'star': Text()}
-    )
-    artistID = Keyword()
-    artist_location
+    artist_name = Text(analyzer=name_anl)
+    artist_id = Keyword()
+    artist_location = Text(analyzer=text_anl)
     duration = Float()
-    genreabs = Text(
+    genres = Text(
         analyzer=cat_anl,
-        fields={'raw': Text()}
+        fields={'genres': Text()}
     )
     album = Text(analyzer=text_anl)
     year = Integer()
     similar_artists = Keyword(
-        fields={'artistID': Text()}
+        fields={'artist_id': Keyword()}
         )
+
 
     class Meta:
         index = 'music'
