@@ -56,3 +56,10 @@ mxm.py: get lyrics information and genre information using API to MXM website ==
   },
   ...
 }
+
+## build elasticsearch corpusSize
+open elasticsearch server:
+`cd elasticsearch-<version>
+./bin/elasticsearch`
+
+run `python ./lib/buildElaticSearch.py`
