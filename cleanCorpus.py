@@ -12,15 +12,6 @@ mm = {}
 def main():
     with open('new_music_corpus.json', 'r') as fp:
         music = json.load(fp)
-    # number = 0
-    # music.pop('energy',None)
-    # music.pop('artist_mbid',None)
-    # music.pop('artist_7digitalid',None)
-    # music.pop('artist_playmeid',None)
-    # music.pop('track_7digitalid',None)
-    # music.pop('release_7digitalid',None)
-    # music.pop('song_id',None)
-    # music.pop('song_id',None)
 
     for song in music:
         music[song].pop('energy',None)
