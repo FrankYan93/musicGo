@@ -11,7 +11,7 @@ from elasticsearch_dsl.connections import connections
 from elasticsearch_dsl.query import Q
 from lib.Track import *
 from lib.Search import *
-with open('new_music_corpus.json', 'r') as opened:
+with open('music_corpus.json', 'r') as opened:
     the_corpus = json.loads(opened.read())
 corpusSize = len(the_corpus)
 connections.create_connection(hosts=['localhost'])

@@ -35,21 +35,21 @@ mxm.py: get lyrics information and genre information using API to MXM website ==
 
 ## Corpus format (1000 songs from Hdf5 file)
 {"1":{
-    trackID: string,
-    title: (song's name) string
-    year: int
-    song_hotttnesss: float
-    artistName: string
-    artistID: string
-    artist_familiarity: float
-    artist_hotttnesss: float
-    artist_location:String
-    duration: (seconds) int
-    release: (album name) string
-    similar_artists: a list of (artistID) string
-    lyrics: string
-
-
+    "trackID": string,
+    "title": (song's name) string
+    "year": int
+    "song_hotttnesss": float
+    "artistName": string
+    "artistID": string
+    "artist_hotttnesss": float
+    "artist_location":String
+    "duration": (seconds) int
+    "release": (album name) string
+    "similar_artists": a list of (artistID) string
+    "lyrics": string
+    "artist_longitude": float
+    "artist_latitude": float
+    "artist_location": String
   },
   "2":{
 
