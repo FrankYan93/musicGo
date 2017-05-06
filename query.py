@@ -9,8 +9,8 @@ from math import *
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.connections import connections
 from elasticsearch_dsl.query import Q
-from lib.Track import *
-from lib.Search import *
+# from lib.Track import *
+# from lib.Search import *
 with open('music_corpus.json', 'r') as opened:
     the_corpus = json.loads(opened.read())
 corpusSize = len(the_corpus)
