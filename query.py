@@ -1,6 +1,7 @@
 # Web App for Query
 from flask import *
 import json
+from json2html import *
 import re
 from flask_paginate import Pagination
 from heapq import *
@@ -93,7 +94,7 @@ def newQuery(request):
         return render_template('SERP.html', results=results, noMatch=True, baseurl = baseurl)
     else:
         for i in results:
-            i[1]['text'] = nl2br(i[1]['text'])[4:]  # remove the first <br> tag
+            i[1]['lyric'] = nl2br(i[1]['lyric'])[4:]  # remove the first <br> tag
             cache[i[0].encode('utf-8')] = json.dumps(i[1].to_dict())
         # limit 10 per page
         pagination = Pagination(page=page, total=resultLen, per_page=10,
