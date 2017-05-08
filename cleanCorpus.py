@@ -10,7 +10,7 @@ pp = pprint.PrettyPrinter(indent=4)
 mm = {}
 
 def main():
-    with open('music_corpus.json', 'r') as fp:
+    with open('new_music_corpus.json', 'r') as fp:
         music = json.load(fp)
 
     for song in music:
@@ -21,7 +21,7 @@ def main():
         music[song].pop('track_7digitalid',None)
         music[song].pop('release_7digitalid',None)
         music[song].pop('song_id',None)
-        music[song].pop('song_id',None)
+        # music[song].pop('song_id',None)
 
         music[song]["genre"] = []
         try:
