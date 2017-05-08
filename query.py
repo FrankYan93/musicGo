@@ -69,11 +69,12 @@ def newQuery(request):
     # clear session when post
     session['resultScore'] = None
     session['recentResultIds'] = None
-
+    print request.form
     response = search(request.form)
     if response:
         session['recentResultIds'] = []
         session['resultScore'] = []
+    print response['hits']
     for e in response['hits']['hits']:
         results.append([])
         results[-1].append(e['_id'])
