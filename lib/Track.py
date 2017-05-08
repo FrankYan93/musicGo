@@ -40,6 +40,10 @@ class Track(DocType):
     similar_artists = Keyword(
         fields={'artist_id': Keyword()}
         )
+    artist_latitude = Float()
+    artist_longitude = Float()
+    song_hotttnesss = Float()
+    danceability = Float()
 
 
     class Meta:

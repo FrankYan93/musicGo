@@ -12,13 +12,27 @@ def import_dict (path):
 
 def build(json_path):
     connections.create_connection(hosts=['localhost'])
+
+    music = Index('music')
+
+    # define custom settings
+    music.settings(
+        number_of_shards=1,
+        number_of_replicas=0
+    )
+
+    # delete the index, ignore if it doesn't exist
+    music.delete(ignore=404)
+
+    # create the index in elasticsearch
+    # music.create()
     Track.init()
 
     track_dict = import_dict(json_path)
 
     track_list = []
     for key in track_dict:
-        track = Track(track_id = track_dict[key]["track_id"], title = track_dict[key]["title"], lyric = track_dict[key]["original_lyrics"], artist_name = track_dict[key]["artist_name"], artist_id = track_dict[key]["artist_id"], artist_location = track_dict[key]["artist_location"], duration = track_dict[key]["duration"], genres = track_dict[key]["genre"], album = track_dict[key]["release"], year = track_dict[key]["year"], similar_artists = track_dict[key]["similar_artists"])
+        track = Track(track_id = track_dict[key]["track_id"], title = track_dict[key]["title"], lyric = track_dict[key]["original_lyrics"], artist_name = track_dict[key]["artist_name"], artist_id = track_dict[key]["artist_id"], artist_location = track_dict[key]["artist_location"], duration = track_dict[key]["duration"], genres = track_dict[key]["genre"], album = track_dict[key]["release"], year = track_dict[key]["year"], similar_artists = track_dict[key]["similar_artists"],artist_latitude = track_dict[key]["artist_latitude"],artist_longitude = track_dict[key]["artist_longitude"],song_hotttnesss = track_dict[key]["song_hotttnesss"],danceability = track_dict[key]["danceability"])
         track.meta.id = track_dict[key]["track_id"]
         track_list.append(track)
 
