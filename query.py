@@ -25,7 +25,7 @@ app = Flask(__name__)
 from jinja2 import evalcontextfilter, Markup, escape
 _paragraph_re = re.compile(r'(?:\r\n|\r|\n){2,}')
 cache = {}
-
+baseurl = "http://0.0.0.0:5000/"
 
 @app.template_filter()
 @evalcontextfilter
@@ -39,7 +39,7 @@ def nl2br(value):
 @app.route('/')
 def entryPage():
     session.clear()
-    return render_template('query.html')
+    return render_template('query.html', baseurl = baseurl)
 
 
 @app.route('/query/<k>')
@@ -59,7 +59,7 @@ def query():
                 results[i]['text'] = nl2br(results[i]['text'])
         pagination = Pagination(page=page, total=len(
             results), per_page=10, prev_label='Prev', next_label='Next', css_framework='foundation')
-        return render_template('SERP.html', results=list(results.iteritems()), noMatch=False, pagination=pagination, page=page, per_page=10, score=session['resultScore'])
+        return render_template('SERP.html', results=list(results.iteritems()), noMatch=False, pagination=pagination, page=page, per_page=10, score=session['resultScore'], baseurl = baseurl)
     return newQuery(request)
 
 def newQuery(request):
@@ -89,7 +89,7 @@ def newQuery(request):
     resultLen = len(results)
     print "resultLen:", resultLen
     if resultLen == 0:
-        return render_template('SERP.html', results=results, noMatch=True)
+        return render_template('SERP.html', results=results, noMatch=True, baseurl = baseurl)
     else:
         for i in results:
             i[1]['text'] = nl2br(i[1]['text'])[4:]  # remove the first <br> tag
@@ -97,7 +97,7 @@ def newQuery(request):
         # limit 10 per page
         pagination = Pagination(page=page, total=resultLen, per_page=10,
                                 prev_label='Prev', next_label='Next', css_framework='foundation')
-        return render_template('SERP.html', results=results, noMatch=False, pagination=pagination, page=page, per_page=10, score=session['resultScore'])
+        return render_template('SERP.html', results=results, noMatch=False, pagination=pagination, page=page, per_page=10, score=session['resultScore'], baseurl = baseurl)
 
 
 app.secret_key = '\x1a\xb0\x06\x8c\xc4+\xb1\xdbm\xe1t?\xad\x14\xd5\xb1\xf8,\x1e\xa2\x82\xd3\xc7\x96'
