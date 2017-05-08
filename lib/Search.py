@@ -49,19 +49,19 @@ def search(d_query):
     s = Track.search()
     s = build_qurey(s,d_query)
     results = s.execute()
-
-    l_results = []
-    s = s[0:results.hits.total]
-    for track in s:
-        dict_track = {}
-        dict_track['id'] = track.meta.id
-        dict_track['score'] = track.meta.score
-        dict_track['title'] = track.title
-        dict_track['lyric'] = track.lyric[0:200]
-
-
-        l_results.append(dict_track)
-    return l_results
+    return results
+    # l_results = []
+    # s = s[0:results.hits.total]
+    # for track in s:
+    #     dict_track = {}
+    #     dict_track['id'] = track.meta.id
+    #     dict_track['score'] = track.meta.score
+    #     dict_track['title'] = track.title
+    #     dict_track['lyric'] = track.lyric[0:200]
+    #
+    #
+    #     l_results.append(dict_track)
+    # return l_results
 
 d_query = {'description':'love','artist_name':'john'}
 print search(d_query)

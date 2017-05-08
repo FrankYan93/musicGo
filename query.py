@@ -10,7 +10,7 @@ from elasticsearch_dsl import Search
 from elasticsearch_dsl.connections import connections
 from elasticsearch_dsl.query import Q
 # from lib.Track import *
-# from lib.Search import *
+from lib.Search import search
 with open('music_corpus.json', 'r') as opened:
     the_corpus = json.loads(opened.read())
 corpusSize = len(the_corpus)
@@ -69,53 +69,8 @@ def newQuery(request):
     # clear session when post
     session['resultScore'] = None
     session['recentResultIds'] = None
-    try:
-        query_string = request.form['query'].strip()
-        artist_string = request.form['artist'].strip()
-        genre_string = request.form['genre'].strip()
-    except KeyError:
-        print "key error? It should not happen!"
-    print "query_string:", query_string
-    print "artist_string:", artist_string
-    print "genre_string:", genre_string
-    query_terms = []
-    query_stop_words = []
-    weight = {}
-    invalidList = []
-    splitedQuery = query_string.split("\"")
-    myQueryDict = {}
-    search = Track.search()
-    for i in range(len(splitedQuery)):
-        if i % 2 == 1:
-            myQueryDict[i] = {
-                "multi_match": {
-                    "query":      splitedQuery[i],
-                    "type":       "phrase",
-                    "operator":   "and",
-                    "fields":     ["title", "text"]
-                }
-            }
-        else:
-            myQueryDict[i] = {
-                "multi_match": {
-                    "query":      splitedQuery[i],
-                    "operator":   "and",
-                    "fields":     ["title", "text"]
-                }
-            }
-        if splitedQuery[i]:
-            search = search.query(Q(myQueryDict[i]))
 
-    qs = Q('match', artist={'query': artist_string})
-    if artist_string:
-        search = search.query(qs)
-    if genre_string:
-        search = search.filter('match', genres={'query': genre_string})
-    search = search[:corpusSize + 1]  # limit size
-    search = search.highlight("*", fragment_size=99999999,
-                              pre_tags='<z>', post_tags='</z>')
-    print(search.to_dict())
-    response = search.execute()
+    response = search(request.form)
     if response:
         session['recentResultIds'] = []
         session['resultScore'] = []

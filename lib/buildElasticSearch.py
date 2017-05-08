@@ -26,5 +26,5 @@ def build(json_path):
     helpers.bulk(es,  (d.to_dict(include_meta=True) for d in track_list ))
 
 if __name__ == '__main__':
-    json_path = "../music_corpus.json"
+    json_path = "music_corpus.json"
     build(json_path)
