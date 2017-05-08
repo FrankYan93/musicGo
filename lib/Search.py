@@ -5,6 +5,7 @@ from Track import *
 def build_qurey(s, d_query):
     # build description query if exists
     if len(d_query['description']) > 0:
+        print 8
         q = Q("bool",
             must=[
             Q("multi_match", query = d_query['description'], fields=['title', 'lyric', 'artist_name', 'artist_location', 'genres', 'album'], operator='and'),
@@ -14,22 +15,43 @@ def build_qurey(s, d_query):
 
     # build query according to artists if exists
     if len(d_query['artist_name']) > 0:
-        s = s.filter(Q('match', artist_name = d_query['artist_name']))
+        print 18
+        s = s.query(Q('match', artist_name = d_query['artist_name']))
         # s = s.sort('artist_name')
 
+    # build query according to artists if exists
+    if len(d_query['artist_location']) > 0:
+        print 24
+        s = s.query(Q('match', artist_location = d_query['artist_location']))
+
+    # build query according to artists if exists
+    if len(d_query['album']) > 0:
+        print 29
+        s = s.query(Q('match', album = d_query['album']))
+
+
+    s = s.query(Q("match_all"))
 
     #build genre filter if exists
     if len(d_query['genre']) > 0:
-        print 52
+        print 38
         s = s.filter(Q('match', genres = d_query['genre']))
 
+    # build query according to artists if exists
+    if len(d_query['year']) > 0:
+        print 42
+        year = int(d_query['year'])
+        s = s.filter(Q('term', year = year))
 
-    # set hightlight in title and text
-    # s = s.highlight_options(order='score')
-    # s = s.highlight("lyric")
-    # s = s.highlight('title')
+
+    corpusSize = 10000
+    s = s[:corpusSize]  # limit size
+    s = s.highlight("*", fragment_size=99999999,
+                              pre_tags='<z>', post_tags='</z>')
 
     print(s.to_dict())
+
+
     return s
 
 # Parameters
@@ -45,12 +67,10 @@ def build_qurey(s, d_query):
 def search(d_query):
     connections.create_connection(hosts=['localhost'])
     Track.init()
-    corpusSize = 10000
+
     s = Track.search()
     s = build_qurey(s,d_query)
-    s = s[:corpusSize]  # limit size
-    s = s.highlight("*", fragment_size=99999999,
-                              pre_tags='<z>', post_tags='</z>')
+
     results = s.execute()
     return results
     # l_results = []
@@ -66,6 +86,14 @@ def search(d_query):
     #     l_results.append(dict_track)
     # return l_results
 
-d_query = {'description': u'love','artist_name':u'','genre':u''}
-print search(d_query)
-# print d
+if __name__ == '__main__':
+    d_query = {'album': u'',
+            'max_longitude': u'', 'min_longitude': u'',
+            'description': u'',
+            'max_duration': u'',
+            'artist_name': u'',
+            'min_latitude': u'',
+            'year': u'2008',
+            'genre': u'','min_duration': u'','max_latitude': u'','artist_location': u''}
+    res = search(d_query)
+    print len(res),'\n\n\n',res
