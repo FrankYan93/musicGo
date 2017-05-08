@@ -75,7 +75,8 @@ def newQuery(request):
     if response:
         session['recentResultIds'] = []
         session['resultScore'] = []
-    print response['hits']
+    for e in response['hits']:
+        print e
     for e in response['hits']['hits']:
         results.append([])
         results[-1].append(e['_id'])

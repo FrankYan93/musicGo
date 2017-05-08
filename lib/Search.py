@@ -45,9 +45,12 @@ def build_qurey(s, d_query):
 def search(d_query):
     connections.create_connection(hosts=['localhost'])
     Track.init()
-
+    corpusSize = 10000
     s = Track.search()
     s = build_qurey(s,d_query)
+    s = s[:corpusSize]  # limit size
+    s = s.highlight("*", fragment_size=99999999,
+                              pre_tags='<z>', post_tags='</z>')
     results = s.execute()
     return results
     # l_results = []
