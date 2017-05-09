@@ -64,3 +64,4 @@ open elasticsearch server:
 ./bin/elasticsearch`
 
 run `python ./lib/buildElaticSearch.py`
+use another terminal to run `redis-server`
