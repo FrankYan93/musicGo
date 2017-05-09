@@ -22,14 +22,15 @@ app = Flask(__name__)
 SESSION_TYPE = 'redis'
 app.config.from_object(__name__)
 Session(app)
+cache = {} # cache dict for current result
+baseurl = "http://0.0.0.0:5000/"
+
 # Here is a useful tool I found. And I did some modification.
 # Originally posted by Dan Jacob on 2010-06-17 @ 05:03 and filed in Template Tricks
 # This is a nl2br (newline to <BR>) filter, adapted from the Jinja2 example here:
 # http://jinja.pocoo.org/2/documentation/api#custom-filters
 from jinja2 import evalcontextfilter, Markup, escape
 _paragraph_re = re.compile(r'(?:\r\n|\r|\n){2,}')
-cache = {} # cache dict for current result
-baseurl = "http://0.0.0.0:5000/"
 
 @app.template_filter()
 @evalcontextfilter
@@ -100,6 +101,7 @@ def moreLikeThis():
     #         'max_latitude':u'',
     #         'artist_location':u''}
     response = search_track(session['docId'])
+    del session['docId']
     return getResult(response)
 
 def newQuery(request):
