@@ -12,30 +12,38 @@ def build_qurey(s, d_query):
         )
         s = s.query(q)
 
-    # build query according to artists if exists
     if len(d_query['artist_name']) > 0:
         s = s.query(Q('match', artist_name = d_query['artist_name']))
-        # s = s.sort('artist_name')
 
-    # build query according to artists if exists
     if len(d_query['artist_location']) > 0:
         s = s.query(Q('match', artist_location = d_query['artist_location']))
 
-    # build query according to artists if exists
     if len(d_query['album']) > 0:
 		s = s.query(Q('match', album = d_query['album']))
 
-
     s = s.query(Q("match_all"))
 
-    #build genre filter if exists
     if len(d_query['genre']) > 0:
 		s = s.filter(Q('match', genres = d_query['genre']))
 
-    # build query according to artists if exists
     if len(d_query['year']) > 0:
         year = int(d_query['year'])
         s = s.filter(Q('term', year = year))
+
+    if len(str(d_query['min_duration'])) > 0 and len(str(d_query['max_duration'])) > 0:
+        l = int(str(d_query['min_duration']))
+        h = int(str(d_query['max_duration']))
+        s = s.filter('range', duration={'lte': h, 'gte': l})
+
+    if len(str(d_query['min_latitude'])) > 0 and len(str(d_query['max_latitude'])) > 0:
+        l = int(str(d_query['min_latitude']))
+        h = int(str(d_query['max_latitude']))
+        s = s.filter('range', artist_latitude={'lte': h, 'gte': l})
+
+    if len(str(d_query['min_longitude'])) > 0 and len(str(d_query['max_longitude'])) > 0:
+        l = int(str(d_query['min_longitude']))
+        h = int(str(d_query['max_longitude']))
+        s = s.filter('range', artist_longitude={'lte': h, 'gte': l})
 
 
     corpusSize = 10000
@@ -88,6 +96,6 @@ if __name__ == '__main__':
             'artist_name': u'',
             'min_latitude': u'',
             'year': u'',
-            'genre': u'','min_duration': u'','max_latitude': u'','artist_location': u''}
+            'genre': u'Jazz','min_duration': u'','max_latitude': u'','artist_location': u''}
     res = search(d_query)
-    print len(res),'\n\n\n',res
+    print len(res) ,'\n\n\n',res[0].meta.id
