@@ -7,7 +7,7 @@ def build_qurey(s, d_query):
     if len(d_query['description']) > 0:
         q = Q("bool",
             must=[
-            Q("multi_match", query = d_query['description'], fields=['title', 'lyric', 'artist_name', 'artist_location', 'album'], operator='and'),
+            Q("multi_match", query = d_query['description'], fields=['title', 'lyric', 'artist_name', 'artist_location', 'album'], operator='or'),
             ],
         )
         s = s.query(q)
@@ -87,6 +87,30 @@ def search(d_query):
     #
     #     l_results.append(dict_track)
     # return l_results
+def build_track_qurey(s,track_id):
+    queries = []
+    track = Track.get(id=track_id)
+    description = track.title + track.lyric
+    queries.append( Q("multi_match", query = description, fields=['title', 'lyric', 'album'], operator='or') )
+    queries.append( Q('match', similar_artists = track.track_id) )
+    s = s.query(Q('bool', **{
+            'should': queries
+        }))
+    corpusSize = 10000
+    s = s[:corpusSize]  # limit size
+    s = s.highlight("*", fragment_size=99999999,
+                              pre_tags='<z>', post_tags='</z>')
+    return s
+
+def search_track(track_id):
+    connections.create_connection(hosts=['localhost'])
+    Track.init()
+
+    s = Track.search()
+    s = build_track_qurey(s,track_id)
+
+    results = s.execute()
+    return results
 
 if __name__ == '__main__':
     d_query = {'album': u'',
@@ -97,5 +121,7 @@ if __name__ == '__main__':
             'min_latitude': u'',
             'year': u'',
             'genre': u'Jazz','min_duration': u'','max_latitude': u'','artist_location': u''}
-    res = search(d_query)
+    # res = search(d_query)
+    # print len(res) ,'\n\n\n',res[0].meta.id
+    res = search_track(6796)
     print len(res) ,'\n\n\n',res[0].meta.id
