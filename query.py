@@ -12,7 +12,7 @@ from elasticsearch_dsl import Search
 from elasticsearch_dsl.connections import connections
 from elasticsearch_dsl.query import Q
 # from lib.Track import *
-from lib.Search import search
+from lib.Search import search#, search_track
 with open('music_corpus.json', 'r') as opened:
     the_corpus = json.loads(opened.read())
 corpusSize = len(the_corpus)
@@ -71,30 +71,49 @@ def query():
 
 @app.route('/query/more/<k>')
 def moreLikeThis(k):
-    print 71
-    for e in session:
-        print e
-    print 74
     currentId = session['recentResultIds'][int(k.encode('utf-8'))]
-    print currentId
-    print the_corpus[currentId]['title'], the_corpus[currentId]['original_lyrics']
-    # session['query'] = the_corpus[currentId]['title'] +\
-    #     " " + the_corpus[currentId]['text']
+    # print currentId
+    # print the_corpus[currentId]['title'], the_corpus[currentId]['original_lyrics']
     session['docId'] = currentId
     return redirect(url_for('query'), code=307)
 
 def moreLikeThis():
-    pass
-
-def newQuery(request):
     cache.clear()
     results = []
     page = 1
     # clear session when post
     session['resultScore'] = None
     session['recentResultIds'] = None
-    # print request.form
+    # qDict = {'album':u'',
+    #         'max_longitude':u'',
+    #         'min_longitude':u'',
+    #         'description':u'',
+    #         'title':u'',
+    #         'artist_name':u'',
+    #         'min_latitude':u'',
+    #         'lyric':u'',
+    #         'max_duration':u'',
+    #         'year':u'',
+    #         'genre':u'',
+    #         'min_duration':u'',
+    #         'max_latitude':u'',
+    #         'artist_location':u''}
+    track_id = corpus[session['docId']]['track_id']
+    response = search_track(track_id)
+    return getResult(response)
+
+def newQuery(request):
+    cache.clear()
+    # clear session when post
+    session['resultScore'] = None
+    session['recentResultIds'] = None
+    print request.form
     response = search(request.form)
+    return getResult(response)
+
+def getResult(response):
+    results = []
+    page = 1
     if response:
         session['recentResultIds'] = []
         session['resultScore'] = []
@@ -113,8 +132,6 @@ def newQuery(request):
         session['resultScore'].append(e['_score'])
     artist_query = []
     resultLen = len(results)
-    for e in session:
-        print e,session[e]
     if resultLen == 0:
         return render_template('SERP.html', results=results, noMatch=True, baseurl = baseurl)
     else:
