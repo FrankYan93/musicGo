@@ -12,6 +12,12 @@ def build_qurey(s, d_query):
         )
         s = s.query(q)
 
+    if len(d_query['title']) > 0:
+        s = s.query(Q('match', title = d_query['title']))
+
+    if len(d_query['lyric']) > 0:
+        s = s.query(Q('match', lyric = d_query['lyric']))
+
     if len(d_query['artist_name']) > 0:
         s = s.query(Q('match', artist_name = d_query['artist_name']))
 
