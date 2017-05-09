@@ -93,10 +93,11 @@ def build_track_qurey(s,track_id):
     description = track.title + track.lyric
     queries.append( Q("multi_match", query = description, fields=['title', 'lyric', 'album'], operator='or') )
     queries.append( Q('match', similar_artists = track.track_id) )
-    s = s.query(Q('bool', **{
-            'should': queries
-        }))
-    corpusSize = 10000
+    for query in queries:
+        s = s.query(Q('bool', **{
+                'should': queries
+            }))
+    corpusSize = 40
     s = s[:corpusSize]  # limit size
     s = s.highlight("*", fragment_size=99999999,
                               pre_tags='<z>', post_tags='</z>')
@@ -123,5 +124,5 @@ if __name__ == '__main__':
             'genre': u'Jazz','min_duration': u'','max_latitude': u'','artist_location': u''}
     # res = search(d_query)
     # print len(res) ,'\n\n\n',res[0].meta.id
-    res = search_track(6796)
+    res = search_track(5883)
     print len(res) ,'\n\n\n',res[0].meta.id
