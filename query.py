@@ -1,5 +1,6 @@
 # Web App for Query
 from flask import *
+from flask.ext.session import Session
 import json
 from json2html import *
 import re
@@ -18,14 +19,16 @@ corpusSize = len(the_corpus)
 connections.create_connection(hosts=['localhost'])
 
 app = Flask(__name__)
-
+SESSION_TYPE = 'redis'
+app.config.from_object(__name__)
+Session(app)
 # Here is a useful tool I found. And I did some modification.
 # Originally posted by Dan Jacob on 2010-06-17 @ 05:03 and filed in Template Tricks
 # This is a nl2br (newline to <BR>) filter, adapted from the Jinja2 example here:
 # http://jinja.pocoo.org/2/documentation/api#custom-filters
 from jinja2 import evalcontextfilter, Markup, escape
 _paragraph_re = re.compile(r'(?:\r\n|\r|\n){2,}')
-cache = {}
+cache = {} # cache dict for current result
 baseurl = "http://0.0.0.0:5000/"
 
 @app.template_filter()
@@ -50,6 +53,9 @@ def article(k):
 
 @app.route('/query/', methods=['POST', 'GET'])
 def query():
+    if 'docId' in session and session['docId']:
+        return moreLikeThis()
+
     page = request.args.get('page', type=int, default=1)
     # print 'page:', page
     results = {}
@@ -62,6 +68,23 @@ def query():
             results), per_page=10, prev_label='Prev', next_label='Next', css_framework='foundation')
         return render_template('SERP.html', results=list(results.iteritems()), noMatch=False, pagination=pagination, page=page, per_page=10, score=session['resultScore'], baseurl = baseurl)
     return newQuery(request)
+
+@app.route('/query/more/<k>')
+def moreLikeThis(k):
+    print 71
+    for e in session:
+        print e
+    print 74
+    currentId = session['recentResultIds'][int(k.encode('utf-8'))]
+    print currentId
+    print the_corpus[currentId]['title'], the_corpus[currentId]['original_lyrics']
+    # session['query'] = the_corpus[currentId]['title'] +\
+    #     " " + the_corpus[currentId]['text']
+    session['docId'] = currentId
+    return redirect(url_for('query'), code=307)
+
+def moreLikeThis():
+    pass
 
 def newQuery(request):
     cache.clear()
@@ -90,7 +113,8 @@ def newQuery(request):
         session['resultScore'].append(e['_score'])
     artist_query = []
     resultLen = len(results)
-    # print "resultLen:", resultLen
+    for e in session:
+        print e,session[e]
     if resultLen == 0:
         return render_template('SERP.html', results=results, noMatch=True, baseurl = baseurl)
     else:
@@ -105,4 +129,4 @@ def newQuery(request):
 
 app.secret_key = '\x1a\xb0\x06\x8c\xc4+\xb1\xdbm\xe1t?\xad\x14\xd5\xb1\xf8,\x1e\xa2\x82\xd3\xc7\x96'
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

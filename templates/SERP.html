@@ -11,6 +11,7 @@
                 <h3>Result #{{ i+1 }}</h3>
                 <h3><a href={{ "./"+results[i][0]}}>Music Title:<strong>{{results[i][1]['title']}}</strong></a></h3>
                 <h4>Score:<strong>{{results[i][1]['score'] or score[i]}}</strong></h4>
+                <a href="./more/{{i}}"><button type="button" name="mlt" class="btn btn-primary">more like this</button></a>
                 <h4>Music Lyrics:</h4>
                 <div class="comment more">
                     {{results[i][1]['lyric']}}
@@ -23,6 +24,7 @@
                 <h3>Result #{{ i+1 }}</h3>
                 <h3><a href={{ "./"+results[i][0]}}>Music Title:<strong>{{results[i][1]['title']}}</strong></a></h3>
                 <h4>Score:<strong>{{results[i][1]['score'] or score[i]}}</strong></h4>
+                <a href="./more/{{i}}"><button type="button" name="mlt" class="btn btn-primary">more like this</button></a>
                 <h4>Music Lyrics:</h4>
                 <div class="comment more">
                     {{results[i][1]['lyric']}}
