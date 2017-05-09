@@ -1,6 +1,6 @@
 # Web App for Query
 from flask import *
-from flask.ext.session import Session
+from flask_session import Session
 import json
 from json2html import *
 import re
@@ -98,7 +98,7 @@ def moreLikeThis():
     #         'min_duration':u'',
     #         'max_latitude':u'',
     #         'artist_location':u''}
-    track_id = corpus[session['docId']]['track_id']
+    track_id = the_corpus[session['docId']]['track_id']
     response = search_track(track_id)
     return getResult(response)
 
