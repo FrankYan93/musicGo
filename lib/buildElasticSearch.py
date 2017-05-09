@@ -46,7 +46,7 @@ def build(json_path):
             song_hotttnesss = 0
 
         track = Track(track_id = track_dict[key]["track_id"], title = track_dict[key]["title"], lyric = track_dict[key]["original_lyrics"], artist_name = track_dict[key]["artist_name"], artist_id = track_dict[key]["artist_id"], artist_location = track_dict[key]["artist_location"], duration = track_dict[key]["duration"], genres = track_dict[key]["genre"], album = track_dict[key]["release"], year = track_dict[key]["year"], similar_artists = track_dict[key]["similar_artists"],artist_latitude = latitude,artist_longitude = longitude,song_hotttnesss = song_hotttnesss ,danceability = track_dict[key]["danceability"])
-        track.meta.id = track_dict[key]["track_id"]
+        track.meta.id = key
         track_list.append(track)
     print len(track_list)
     es = Elasticsearch()
