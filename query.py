@@ -12,7 +12,7 @@ from elasticsearch_dsl import Search
 from elasticsearch_dsl.connections import connections
 from elasticsearch_dsl.query import Q
 # from lib.Track import *
-from lib.Search import search#, search_track
+from lib.Search import search, search_track
 with open('music_corpus.json', 'r') as opened:
     the_corpus = json.loads(opened.read())
 corpusSize = len(the_corpus)
@@ -49,6 +49,7 @@ def entryPage():
 @app.route('/query/<k>')
 def article(k):
     # return render_template('target_article.html',article=the_corpus[k])
+    print "cache:",cache
     return render_template("target_article.html", table=Markup(json2html.convert(cache[k.encode('utf-8')])))
 
 @app.route('/query/', methods=['POST', 'GET'])
@@ -63,7 +64,7 @@ def query():
         if 'recentResultIds' in session:
             for i in set(session['recentResultIds']):
                 results[i] = the_corpus[i]
-                results[i]['text'] = nl2br(results[i]['text'])
+                results[i]['lyric'] = nl2br(results[i]['original_lyrics'])
         pagination = Pagination(page=page, total=len(
             results), per_page=10, prev_label='Prev', next_label='Next', css_framework='foundation')
         return render_template('SERP.html', results=list(results.iteritems()), noMatch=False, pagination=pagination, page=page, per_page=10, score=session['resultScore'], baseurl = baseurl)
@@ -98,8 +99,7 @@ def moreLikeThis():
     #         'min_duration':u'',
     #         'max_latitude':u'',
     #         'artist_location':u''}
-    track_id = the_corpus[session['docId']]['track_id']
-    response = search_track(track_id)
+    response = search_track(session['docId'])
     return getResult(response)
 
 def newQuery(request):
