@@ -2,13 +2,19 @@
 from Track import *
 from elasticsearch import *
 import json
-
+import re
 
 def import_dict (path):
     json_file = open(path, 'r')
     track_dict = json.loads(json_file.read())
     json_file.close()
     return track_dict
+
+def convert (s):
+    if re.match("^\d+?\.\d+?$", s) is None:
+        return 0.0
+    else:
+        return float(s)
 
 def build(json_path):
     connections.create_connection(hosts=['localhost'])
@@ -32,22 +38,21 @@ def build(json_path):
 
     track_list = []
     for key in track_dict:
-        try:
-            latitude = int(track_dict[key]["artist_latitude"])
-        except:
-            latitude = 0
-        try:
-            longitude = int(track_dict[key]["artist_longitude"])
-        except:
-            longitude = 0
-        try:
-            song_hotttnesss = int(track_dict[key]["song_hotttnesss"])
-        except:
-            song_hotttnesss = 0
+        latitude = convert(track_dict[key]["artist_latitude"])
 
-        track = Track(track_id = track_dict[key]["track_id"], title = track_dict[key]["title"], lyric = track_dict[key]["original_lyrics"], artist_name = track_dict[key]["artist_name"], artist_id = track_dict[key]["artist_id"], artist_location = track_dict[key]["artist_location"], duration = track_dict[key]["duration"], genres = track_dict[key]["genre"], album = track_dict[key]["release"], year = track_dict[key]["year"], similar_artists = track_dict[key]["similar_artists"],artist_latitude = latitude,artist_longitude = longitude,song_hotttnesss = song_hotttnesss ,danceability = track_dict[key]["danceability"])
+        longitude = convert(track_dict[key]["artist_longitude"])
+
+        song_hotttnesss = convert(track_dict[key]["song_hotttnesss"])
+
+        danceability = convert(track_dict[key]["danceability"])
+
+        duration = convert(track_dict[key]["duration"])
+
+
+        track = Track(track_id = track_dict[key]["track_id"], title = track_dict[key]["title"], lyric = track_dict[key]["original_lyrics"], artist_name = track_dict[key]["artist_name"], artist_id = track_dict[key]["artist_id"], artist_location = track_dict[key]["artist_location"], genres = track_dict[key]["genre"], album = track_dict[key]["release"], year = track_dict[key]["year"], similar_artists = track_dict[key]["similar_artists"],artist_latitude = latitude,artist_longitude = longitude,song_hotttnesss = song_hotttnesss ,danceability = danceability ,  duration = duration)
         track.meta.id = key
         track_list.append(track)
+
     print len(track_list)
     es = Elasticsearch()
     helpers.bulk(es,  (d.to_dict(include_meta=True) for d in track_list ))
