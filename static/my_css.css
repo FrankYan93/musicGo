@@ -54,3 +54,7 @@ th {
     background-color: #4CAF50;
     color: white;
 }
+
+.search-background img {
+    width: 100%;
+}

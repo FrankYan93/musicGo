@@ -1,0 +1,39 @@
+{% extends "layout.html" %} {% block title %}Search Result Page{% endblock %} {% block body %}
+    <div class="container">
+        {% if noMatch: %} {% if not invalid: %}
+        <h2>No Results! Try again!</h2> {% else: %}
+        <h2>Unknown search term:{% for e in invalid: %}<em>{{e}} </em>{% endfor %}</h2> {% endif %} {% else: %}
+        <h2>Here are the results:</h2>
+        <h2>Ignoring term:{% for e in query_stop_words:%}<em>{{e}} </em>{% endfor %}</h2> {{ pagination.info }} {{ pagination.links }} {% if results|length
+        <=page*per_page %} {% for i in range((page-1)*per_page,results|length): %} <!-- <p>Document Number:{{k}}</p> -->
+            <div class="container">
+                <p>-------------------------------------------------------------------------------------------------------------</p>
+                <h3>Result #{{ i+1 }}</h3>
+                <h3><a href={{ "./"+results[i][0]}}>Music Title:<strong>{{results[i][1]['title']}}</strong></a></h3>
+                <h4>Score:<strong>{{results[i][1]['score'] or score[i]}}</strong></h4>
+                <a href="./more/{{i}}"><button type="button" name="mlt" class="btn btn-primary">more like this</button></a>
+                <h4>Music Lyrics:</h4>
+                <div class="comment more">
+                    {{results[i][1]['lyric']}}
+                </div>
+            </div>
+
+            {% endfor %} {{ pagination.links }} {% else: %} {% for i in range((page-1)*per_page,page*per_page): %}
+            <div class="container">
+                <p>-------------------------------------------------------------------------------------------------------------</p>
+                <h3>Result #{{ i+1 }}</h3>
+                <h3><a href={{ "./"+results[i][0]}}>Music Title:<strong>{{results[i][1]['title']}}</strong></a></h3>
+                <h4>Score:<strong>{{results[i][1]['score'] or score[i]}}</strong></h4>
+                <a href="./more/{{i}}"><button type="button" name="mlt" class="btn btn-primary">more like this</button></a>
+                <h4>Music Lyrics:</h4>
+                <div class="comment more">
+                    {{results[i][1]['lyric']}}
+                </div>
+            </div>
+            {% endfor %} {{ pagination.links }} {% endif %} {% endif %}
+    </div>
+<script type="text/javascript">
+    $(".comment").shorten({"showChars": 450});
+    $(document).ready(function() {$(".comment").shorten();});
+</script>
+{% endblock %}
