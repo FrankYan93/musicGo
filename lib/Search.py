@@ -2,7 +2,7 @@ import json
 import re
 from Track import *
 
-def build_qurey(s, d_query):
+def build_qurey(s, d_query, flag):
     # build description query if exists
     if len(d_query['description']) > 0:
         q = Q("bool",
@@ -51,6 +51,14 @@ def build_qurey(s, d_query):
         h = int(str(d_query['max_longitude']))
         s = s.filter('range', artist_longitude={'lte': h, 'gte': l})
 
+    if flag == 'hot':
+        s = s.sort(
+        { "song_hotttnesss" : "desc" }
+        )
+    elif flag == 'dance':
+        s = s.sort(
+        { "danceability" : "desc" }
+        )
 
     corpusSize = 40
     s = s[:corpusSize]  # limit size
@@ -72,27 +80,17 @@ def build_qurey(s, d_query):
 # Returns
 # -------
 # a list of dictionary
-def search(d_query):
+def search(d_query,flag = 'none'):
     connections.create_connection(hosts=['localhost'])
     Track.init()
 
     s = Track.search()
-    s = build_qurey(s,d_query)
+    s = build_qurey(s,d_query,flag)
 
     results = s.execute()
     return results
-    # l_results = []
-    # s = s[0:results.hits.total]
-    # for track in s:
-    #     dict_track = {}
-    #     dict_track['id'] = track.meta.id
-    #     dict_track['score'] = track.meta.score
-    #     dict_track['title'] = track.title
-    #     dict_track['lyric'] = track.lyric[0:200]
-    #
-    #
-    #     l_results.append(dict_track)
-    # return l_results
+
+
 def build_track_qurey(s,track_id):
     queries = []
     track = Track.get(id=track_id)
@@ -120,17 +118,23 @@ def search_track(track_id):
     return results
 
 if __name__ == '__main__':
-    d_query = {'album': u'',
-            'title': u'',
-            'lyric': u'',
+
+    d_query = {'title': u'',
+                'lyric': u'',
+            'album': u'',
+
             'max_longitude': u'', 'min_longitude': u'',
             'description': u'love',
             'max_duration': u'',
             'artist_name': u'',
             'min_latitude': u'',
             'year': u'',
-            'genre': u'Jazz','min_duration': u'','max_latitude': u'','artist_location': u''}
-    res = search(d_query)
+
+            'genre': u'','min_duration': u'','max_latitude': u'','artist_location': u''}
+    res = search(d_query,'hot')
+
     # print len(res) ,'\n\n\n',res[0].meta.id
     # res = search_track(5883)
     print len(res) ,'\n\n\n',res[0].meta.id
+    for song in res:
+        print song.song_hotttnesss
