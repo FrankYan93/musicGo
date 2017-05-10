@@ -52,7 +52,7 @@ def build_qurey(s, d_query):
         s = s.filter('range', artist_longitude={'lte': h, 'gte': l})
 
 
-    corpusSize = 10000
+    corpusSize = 40
     s = s[:corpusSize]  # limit size
     s = s.highlight("*", fragment_size=99999999,
                               pre_tags='<z>', post_tags='</z>')
@@ -121,14 +121,16 @@ def search_track(track_id):
 
 if __name__ == '__main__':
     d_query = {'album': u'',
+            'title': u'',
+            'lyric': u'',
             'max_longitude': u'', 'min_longitude': u'',
-            'description': u'',
+            'description': u'love',
             'max_duration': u'',
             'artist_name': u'',
             'min_latitude': u'',
             'year': u'',
             'genre': u'Jazz','min_duration': u'','max_latitude': u'','artist_location': u''}
-    # res = search(d_query)
+    res = search(d_query)
     # print len(res) ,'\n\n\n',res[0].meta.id
-    res = search_track(5883)
+    # res = search_track(5883)
     print len(res) ,'\n\n\n',res[0].meta.id
