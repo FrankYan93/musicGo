@@ -50,7 +50,7 @@ def entryPage():
 @app.route('/query/<k>')
 def article(k):
     # return render_template('target_article.html',article=the_corpus[k])
-    print "cache:",cache
+    # print "cache:",cache
     return render_template("target_article.html", table=Markup(json2html.convert(cache[k.encode('utf-8')])))
 
 @app.route('/query/', methods=['POST', 'GET'])
