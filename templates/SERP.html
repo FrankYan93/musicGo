@@ -33,7 +33,15 @@
       <h2>No Results! Try again!</h2> {% else: %}
       <h2>Unknown search term:{% for e in invalid: %}<em>{{e}} </em>{% endfor %}</h2> {% endif %} {% else: %}
       <h2>Here are the results:</h2>
-      <h2>Ignoring term:{% for e in query_stop_words:%}<em>{{e}} </em>{% endfor %}</h2> {% if results|length
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Sort By
+          <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li><a href="{{baseurl}}query?hot=0">hotness</a></li>
+          <li><a href="{{baseurl}}query?dance=0">danceability</a></li>
+        </ul>
+      </div>
+      {% if results|length
       <=page*per_page %} {% for i in range((page-1)*per_page,results|length): %} <!-- <p>Document Number:{{k}}</p> -->
 
         <li class="card__item card__item--blue">
@@ -54,7 +62,7 @@
     </ul>
 
 
-    {% endfor %} {{ pagination.links }} {% else: %} {% for i in range((page-1)*per_page,page*per_page): %}
+    {% endfor %} {% else: %} {% for i in range((page-1)*per_page,page*per_page): %}
     <li class="card__item card__item--blue">
       <div class="card__info">
         <div class="info-player">

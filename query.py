@@ -22,7 +22,7 @@ app = Flask(__name__)
 SESSION_TYPE = 'redis'
 app.config.from_object(__name__)
 Session(app)
-cache = {} # cache dict for current result
+cache = {}  # cache dict for current result
 
 
 # Being more formal, we should use environment variable here.
@@ -36,6 +36,7 @@ baseurl = "http://0.0.0.0:5000/"
 from jinja2 import evalcontextfilter, Markup, escape
 _paragraph_re = re.compile(r'(?:\r\n|\r|\n){2,}')
 
+
 @app.template_filter()
 @evalcontextfilter
 def nl2br(value):
@@ -48,7 +49,7 @@ def nl2br(value):
 @app.route('/')
 def entryPage():
     session.clear()
-    return render_template('query.html', baseurl = baseurl)
+    return render_template('query.html', baseurl=baseurl)
 
 
 @app.route('/query/<k>')
@@ -56,6 +57,19 @@ def article(k):
     # return render_template('target_article.html',article=the_corpus[k])
     # print "cache:",cache
     return render_template("target_article.html", table=Markup(json2html.convert(cache[k.encode('utf-8')])))
+
+@app.route('/query', methods=['GET'])
+def sortby():
+    print "request.args",request.args
+    if 'hot' in request.args:
+        print 'hot'
+        return newQuery(request, 'hot')
+    elif 'dance' in request.args:
+        print 'dance'
+        return newQuery(request, 'dance')
+    else:
+        return "invalid url or not required parameters"
+
 
 @app.route('/query/', methods=['POST', 'GET'])
 def query():
@@ -66,21 +80,25 @@ def query():
     # print 'page:', page
     results = {}
     if request.method == 'GET':
+
         if 'recentResultIds' in session:
             for i in set(session['recentResultIds']):
                 results[i] = the_corpus[i]
                 results[i]['lyric'] = nl2br(results[i]['original_lyrics'])
         # pagination = Pagination(page=page, total=len(results), per_page=10, prev_label='Prev', next_label='Next', css_framework='foundation')
-        return render_template('SERP.html', results=list(results.iteritems()), noMatch=False, page=page, per_page=10, score=session['resultScore'], baseurl = baseurl)
+        return render_template('SERP.html', results=list(results.iteritems()), noMatch=False, page=page, per_page=10, score=session['resultScore'], baseurl=baseurl)
     return newQuery(request)
+
 
 @app.route('/query/more/<k>')
 def moreLikeThis(k):
     currentId = session['recentResultIds'][int(k.encode('utf-8'))]
     # print currentId
-    # print the_corpus[currentId]['title'], the_corpus[currentId]['original_lyrics']
+    # print the_corpus[currentId]['title'],
+    # the_corpus[currentId]['original_lyrics']
     session['docId'] = currentId
     return redirect(url_for('query'), code=307)
+
 
 def moreLikeThis():
     cache.clear()
@@ -107,14 +125,21 @@ def moreLikeThis():
     del session['docId']
     return getResult(response)
 
-def newQuery(request):
-    cache.clear()
-    # clear session when post
-    session['resultScore'] = None
-    session['recentResultIds'] = None
-    print request.form
-    response = search(request.form)
-    return getResult(response)
+
+def newQuery(request, flag=None):
+    if not flag:
+        cache.clear()
+        # clear session when post
+        session['resultScore'] = None
+        session['recentResultIds'] = None
+        print request.form
+        session['latestForm'] = request.form
+        response = search(request.form)
+        return getResult(response)
+    else:
+        response = search(request.form, flag)
+        return getResult(response)
+
 
 def getResult(response):
     results = []
@@ -138,14 +163,14 @@ def getResult(response):
     artist_query = []
     resultLen = len(results)
     if resultLen == 0:
-        return render_template('SERP.html', results=results, noMatch=True, baseurl = baseurl)
+        return render_template('SERP.html', results=results, noMatch=True, baseurl=baseurl)
     else:
         for i in results:
             i[1]['lyric'] = nl2br(i[1]['lyric'])
             cache[i[0].encode('utf-8')] = json.dumps(i[1].to_dict())
         # limit 10 per page
         # pagination = Pagination(page=page, total=resultLen, per_page=10, prev_label='Prev', next_label='Next', css_framework='foundation')
-        return render_template('SERP.html', results=results, noMatch=False, page=page, per_page=10, score=session['resultScore'], baseurl = baseurl)
+        return render_template('SERP.html', results=results, noMatch=False, page=page, per_page=10, score=session['resultScore'], baseurl=baseurl)
 
 
 app.secret_key = '\x1a\xb0\x06\x8c\xc4+\xb1\xdbm\xe1t?\xad\x14\xd5\xb1\xf8,\x1e\xa2\x82\xd3\xc7\x96'
