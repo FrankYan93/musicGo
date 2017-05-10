@@ -23,6 +23,10 @@ SESSION_TYPE = 'redis'
 app.config.from_object(__name__)
 Session(app)
 cache = {} # cache dict for current result
+
+
+# Being more formal, we should use environment variable here.
+# But now we just want to make it simple.
 baseurl = "http://0.0.0.0:5000/"
 
 # Here is a useful tool I found. And I did some modification.
