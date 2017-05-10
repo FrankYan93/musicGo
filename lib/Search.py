@@ -12,44 +12,45 @@ def build_qurey(s, d_query, flag):
         )
         s = s.query(q)
 
-    if len(d_query['title']) > 0:
-        s = s.query(Q('match', title = d_query['title']))
+    if 'title' in d_query:
+        if len(d_query['title']) > 0:
+            s = s.query(Q('match', title = d_query['title']))
 
-    if len(d_query['lyric']) > 0:
-        s = s.query(Q('match', lyric = d_query['lyric']))
+        if len(d_query['lyric']) > 0:
+            s = s.query(Q('match', lyric = d_query['lyric']))
 
-    if len(d_query['artist_name']) > 0:
-        s = s.query(Q('match', artist_name = d_query['artist_name']))
+        if len(d_query['artist_name']) > 0:
+            s = s.query(Q('match', artist_name = d_query['artist_name']))
 
-    if len(d_query['artist_location']) > 0:
-        s = s.query(Q('match', artist_location = d_query['artist_location']))
+        if len(d_query['artist_location']) > 0:
+            s = s.query(Q('match', artist_location = d_query['artist_location']))
 
-    if len(d_query['album']) > 0:
-		s = s.query(Q('match', album = d_query['album']))
+        if len(d_query['album']) > 0:
+    		s = s.query(Q('match', album = d_query['album']))
 
-    s = s.query(Q("match_all"))
+        s = s.query(Q("match_all"))
 
-    if len(d_query['genre']) > 0:
-		s = s.filter(Q('match', genres = d_query['genre']))
+        if len(d_query['genre']) > 0:
+    		s = s.filter(Q('match', genres = d_query['genre']))
 
-    if len(d_query['year']) > 0:
-        year = int(d_query['year'])
-        s = s.filter(Q('term', year = year))
+        if len(d_query['year']) > 0:
+            year = int(d_query['year'])
+            s = s.filter(Q('term', year = year))
 
-    if len(str(d_query['min_duration'])) > 0 and len(str(d_query['max_duration'])) > 0:
-        l = int(str(d_query['min_duration']))
-        h = int(str(d_query['max_duration']))
-        s = s.filter('range', duration={'lte': h, 'gte': l})
+        if len(str(d_query['min_duration'])) > 0 and len(str(d_query['max_duration'])) > 0:
+            l = int(str(d_query['min_duration']))
+            h = int(str(d_query['max_duration']))
+            s = s.filter('range', duration={'lte': h, 'gte': l})
 
-    if len(str(d_query['min_latitude'])) > 0 and len(str(d_query['max_latitude'])) > 0:
-        l = int(str(d_query['min_latitude']))
-        h = int(str(d_query['max_latitude']))
-        s = s.filter('range', artist_latitude={'lte': h, 'gte': l})
+        if len(str(d_query['min_latitude'])) > 0 and len(str(d_query['max_latitude'])) > 0:
+            l = int(str(d_query['min_latitude']))
+            h = int(str(d_query['max_latitude']))
+            s = s.filter('range', artist_latitude={'lte': h, 'gte': l})
 
-    if len(str(d_query['min_longitude'])) > 0 and len(str(d_query['max_longitude'])) > 0:
-        l = int(str(d_query['min_longitude']))
-        h = int(str(d_query['max_longitude']))
-        s = s.filter('range', artist_longitude={'lte': h, 'gte': l})
+        if len(str(d_query['min_longitude'])) > 0 and len(str(d_query['max_longitude'])) > 0:
+            l = int(str(d_query['min_longitude']))
+            h = int(str(d_query['max_longitude']))
+            s = s.filter('range', artist_longitude={'lte': h, 'gte': l})
 
     if flag == 'hot':
         s = s.sort(
@@ -119,19 +120,20 @@ def search_track(track_id):
 
 if __name__ == '__main__':
 
-    d_query = {'title': u'',
-                'lyric': u'',
-            'album': u'',
+    # d_query = {'title': u'',
+    #             'lyric': u'',
+    #         'album': u'',
+    #         'max_longitude': u'', 'min_longitude': u'',
+    #         'description': u'love',
+    #         'max_duration': u'',
+    #         'artist_name': u'',
+    #         'min_latitude': u'',
+    #         'year': u'',
+    #
+    #         'genre': u'','min_duration': u'','max_latitude': u'','artist_location': u''}
 
-            'max_longitude': u'', 'min_longitude': u'',
-            'description': u'love',
-            'max_duration': u'',
-            'artist_name': u'',
-            'min_latitude': u'',
-            'year': u'',
 
-            'genre': u'','min_duration': u'','max_latitude': u'','artist_location': u''}
-    res = search(d_query,'hot')
+    res = search({'description': u'love'},'hot')
 
     # print len(res) ,'\n\n\n',res[0].meta.id
     # res = search_track(5883)
