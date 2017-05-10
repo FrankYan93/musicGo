@@ -137,11 +137,12 @@ def newQuery(request, flag=None):
         response = search(request.form)
         return getResult(response)
     else:
-        response = search(request.form, flag)
+        response = search(session['latestForm'], flag)
         return getResult(response)
 
 
 def getResult(response):
+    print 145
     results = []
     page = 1
     if response:
