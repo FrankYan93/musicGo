@@ -1,6 +1,6 @@
 .DS_Store
 *.pyc
-
+dump.rdb
 display_song.py
 mxm_779k_matches.txt
 mxm_dataset_test.txt
