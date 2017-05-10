@@ -4,7 +4,7 @@ from flask_session import Session
 import json
 from json2html import *
 import re
-from flask_paginate import Pagination
+# from flask_paginate import Pagination
 from heapq import *
 from collections import defaultdict
 from math import *
@@ -66,9 +66,8 @@ def query():
             for i in set(session['recentResultIds']):
                 results[i] = the_corpus[i]
                 results[i]['lyric'] = nl2br(results[i]['original_lyrics'])
-        pagination = Pagination(page=page, total=len(
-            results), per_page=10, prev_label='Prev', next_label='Next', css_framework='foundation')
-        return render_template('SERP.html', results=list(results.iteritems()), noMatch=False, pagination=pagination, page=page, per_page=10, score=session['resultScore'], baseurl = baseurl)
+        # pagination = Pagination(page=page, total=len(results), per_page=10, prev_label='Prev', next_label='Next', css_framework='foundation')
+        return render_template('SERP.html', results=list(results.iteritems()), noMatch=False, page=page, per_page=10, score=session['resultScore'], baseurl = baseurl)
     return newQuery(request)
 
 @app.route('/query/more/<k>')
@@ -141,9 +140,8 @@ def getResult(response):
             i[1]['lyric'] = nl2br(i[1]['lyric'])
             cache[i[0].encode('utf-8')] = json.dumps(i[1].to_dict())
         # limit 10 per page
-        pagination = Pagination(page=page, total=resultLen, per_page=10,
-                                prev_label='Prev', next_label='Next', css_framework='foundation')
-        return render_template('SERP.html', results=results, noMatch=False, pagination=pagination, page=page, per_page=10, score=session['resultScore'], baseurl = baseurl)
+        # pagination = Pagination(page=page, total=resultLen, per_page=10, prev_label='Prev', next_label='Next', css_framework='foundation')
+        return render_template('SERP.html', results=results, noMatch=False, page=page, per_page=10, score=session['resultScore'], baseurl = baseurl)
 
 
 app.secret_key = '\x1a\xb0\x06\x8c\xc4+\xb1\xdbm\xe1t?\xad\x14\xd5\xb1\xf8,\x1e\xa2\x82\xd3\xc7\x96'
