@@ -1,81 +1,84 @@
 {% extends "layout.html" %} {% block title %}Search Result Page{% endblock %} {% block body %}
 
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/normalize.css') }}" />
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/demo.css') }}" />
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/normalize.css') }}" />
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/demo.css') }}" />
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
 </head>
 
 <body>
 
-<div class="view">
-	<div class="card__full">
-		<div class="card__full-top">
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <div class="view">
+    <div class="card__full">
+      <div class="card__full-top">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 					<path d="M16.59 8.59l-4.59 4.58-4.59-4.58-1.41 1.41 6 6 6-6z"/>
 					<path d="M0 0h24v24h-24z" fill="none"/>
 			</svg>
-			<span class="card__full-num"></span>
-		</div>
-		<div class="card__full-bottom">
-			<p class="card__full-handle"></p>
-			<p class="card__full-info"></p>
-		</div>
-	</div>
-  <ul class="card__list">
-	      </br></br>
-        {% if noMatch: %} {% if not invalid: %}
-        <h2>No Results! Try again!</h2> {% else: %}
-        <h2>Unknown search term:{% for e in invalid: %}<em>{{e}} </em>{% endfor %}</h2> {% endif %} {% else: %}
-        <h2>Here are the results:</h2>
-        <h2>Ignoring term:{% for e in query_stop_words:%}<em>{{e}} </em>{% endfor %}</h2> {{ pagination.info }} {{ pagination.links }} {% if results|length
-        <=page*per_page %} {% for i in range((page-1)*per_page,results|length): %} <!-- <p>Document Number:{{k}}</p> -->
+        <span class="card__full-num"></span>
+      </div>
+      <div class="card__full-bottom">
+        <p class="card__full-handle"></p>
+        <p class="card__full-info"></p>
+      </div>
+    </div>
+    <ul class="card__list">
+      </br>
+      </br>
+      {% if noMatch: %} {% if not invalid: %}
+      <h2>No Results! Try again!</h2> {% else: %}
+      <h2>Unknown search term:{% for e in invalid: %}<em>{{e}} </em>{% endfor %}</h2> {% endif %} {% else: %}
+      <h2>Here are the results:</h2>
+      <h2>Ignoring term:{% for e in query_stop_words:%}<em>{{e}} </em>{% endfor %}</h2> {% if results|length
+      <=page*per_page %} {% for i in range((page-1)*per_page,results|length): %} <!-- <p>Document Number:{{k}}</p> -->
 
-				<li class="card__item card__item--blue">
-					<div class="card__info">
-						<div class="info-player">
-							<p class="info-player__num">{{ i+1 }}</p>
-							<p class="info-player__name"><a href={{ "./"+results[i][0]}}><strong>{{results[i][1]['title']}}</strong></a></p>
-							<p class="info-player__name">
-									<small>{{results[i][1]['lyric']}}</small>
-						  </p>
-							<a href="./more/{{i}}"><button type="button" name="mlt" class="btn btn-primary">more like this</button></a>
+        <li class="card__item card__item--blue">
+          <div class="card__info">
+            <div class="info-player">
+              <p class="info-player__num">{{ i+1 }}</p>
+              <p class="info-player__name"><a href={{ "./"+results[i][0]}}><strong>{{results[i][1]['title']}}</strong></a></p>
+              <p class="info-player__name">
+                <small>{{results[i][1]['lyric']}}</small>
+              </p>
+              <a href="./more/{{i}}"><button type="button" name="mlt" class="btn btn-primary">more like this</button></a>
 
-						</div>
-					</div>
-				</li>
-			</br></br>
-			</ul>
-
-
-            {% endfor %} {{ pagination.links }} {% else: %} {% for i in range((page-1)*per_page,page*per_page): %}
-            <li class="card__item card__item--blue">
-              <div class="card__info">
-                <div class="info-player">
-                  <p class="info-player__num">{{ i+1 }}</p>
-                  <p class="info-player__name"><a href={{ "./"+results[i][0]}}><strong>{{results[i][1]['title']}}</strong></a></p>
-									<p class="info-player__name">
-											<small>{{results[i][1]['lyric']}}</small>
-								  </p>
-									<a href="./more/{{i}}"><button type="button" name="mlt" class="btn btn-primary">more like this</button></a>
+            </div>
+          </div>
+        </li>
+        </br>
+        </br>
+    </ul>
 
 
-                </div>
-              </div>
-            </li>
-					</br></br>
-          </ul>
-        {% endfor %} {{ pagination.links }} {% endif %} {% endif %}
-</div>
+    {% endfor %} {{ pagination.links }} {% else: %} {% for i in range((page-1)*per_page,page*per_page): %}
+    <li class="card__item card__item--blue">
+      <div class="card__info">
+        <div class="info-player">
+          <p class="info-player__num">{{ i+1 }}</p>
+          <p class="info-player__name"><a href={{ "./"+results[i][0]}}><strong>{{results[i][1]['title']}}</strong></a></p>
+          <p class="info-player__name">
+            <small>{{results[i][1]['lyric']}}</small>
+          </p>
+          <a href="./more/{{i}}"><button type="button" name="mlt" class="btn btn-primary">more like this</button></a>
+
+
+        </div>
+      </div>
+    </li>
+    </br>
+    </br>
+    </ul>
+    {% endfor %} {% endif %} {% endif %}
+  </div>
 
 
 
-<script src="{{ url_for('static', filename='jquery-2.1.1.min.js') }}" type="text/javascript"></script>
-<script src="{{ url_for('static', filename='cards.js') }}" type="text/javascript"></script>
+  <script src="{{ url_for('static', filename='jquery-2.1.1.min.js') }}" type="text/javascript"></script>
+  <script src="{{ url_for('static', filename='cards.js') }}" type="text/javascript"></script>
 
 
 
