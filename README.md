@@ -91,6 +91,12 @@ Jiadong Yan
 
 ## Modules
 
+### query.py
+* Main entry or runtime app of the Music Information Retrieval System.  
+* Integrate all the models and handle all the http request.  
+* Search Algorithm implementation.
+* Session management.
+
 ### static folder:
 css file and images
 
