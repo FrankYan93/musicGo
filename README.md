@@ -4,6 +4,9 @@
 **[Jiaming Xu](https://github.com/Dragoncell)**  
 **[Xinyi Jiang](https://github.com/xyjiang94)**  
 
+## Code submitted by
+Jiadong Yan
+
 ## Latest Modify Date
 **May 10th 2017**
 
@@ -63,9 +66,6 @@ cd elasticsearch-<version>
 - json
 - math
 - redis
-
-## Code submitted by
-Jiadong Yan
 
 ## Corpus Source
 - https://labrosa.ee.columbia.edu/millionsong/
