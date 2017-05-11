@@ -10,9 +10,6 @@ Jiadong Yan
 ## Latest Modify Date
 **May 10th 2017**
 
-## Code submitted by
-Jiadong Yan
-
 ## Functionality
 1. basic search: search the description on title, lyric, album and artist_name
 2. advanced search: search on every possible filed, including title, lyric, album, artist_name, location, duration, genres, year
