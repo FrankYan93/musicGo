@@ -10,6 +10,9 @@ Jiadong Yan
 ## Latest Modify Date
 **May 10th 2017**
 
+## Code submitted by
+Jiadong Yan
+
 ## Functionality
 1. basic search: search the description on title, lyric, album and artist_name
 2. advanced search: search on every possible filed, including title, lyric, album, artist_name, location, duration, genres, year
@@ -29,7 +32,13 @@ Jiadong Yan
 5. install other packages mentioned in **Dependency**.
 6. build elasticsearch as mentioned in **Build Elasticsearch**
 7. type `redis-server` in terminal
-8. `python query.py`
+8. open another  terminal window, type:
+```
+cd elasticsearch-<version>
+./bin/elasticsearch
+```
+9. `python query.py`
+
 
 ## Build Elasticsearch
 - `cp lib/name_syn.txt [your elasticsearch path]/config/name_syn.txt`
@@ -38,7 +47,6 @@ Jiadong Yan
 - open elasticsearch server:
   `cd elasticsearch-<version>  
   ./bin/elasticsearch`  
-
 - run `python ./lib/buildElaticSearch.py`
 - build time: 9s
 - use another terminal to run `redis-server`
@@ -87,6 +95,35 @@ Jiadong Yan
   },  
   ...  
 }
+
+## Test Set and sample queries
+We have a test corpus `sample_corpus.json`. To build elasticsearch with this corpus, call build method with the path of sample corpus as parameter: `build("sample_corpus.json")`
+
+#### search by query
+1. simple query: {'description': u'love'}}
+2. advanced search query:
+d_query = {'title': u'',
+              'lyric': u'',
+              'album': u'',
+              'max_longitude': u'', 'min_longitude': u'',
+              'description': u'love',
+              'max_duration': u'','min_duration': u'',
+              'artist_name': u'',
+              'min_latitude': u'', 'max_latitude': u'',
+              'year': u'',
+              'genre': u'',
+              'artist_location': u''}
+
+#### search by track
+The parameter is the track_id
+
+#### sort
+use 'hot' or 'dance' as parameter, the results will sort by song_hotttnesss or danceability.
+
+#### How to search
+search({'description': u'love'},'hot')
+search(d_query,'hot')
+search_track(1,'dance')
 
 
 ## Modules
