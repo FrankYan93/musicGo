@@ -40,6 +40,10 @@
 - build time: 9s
 - use another terminal to run `redis-server`
 
+## Functionality
+1. We support baisc title and lyrics search for whatever you want!  
+2. We support many filters, like duration, artist, genre, etc!  
+3. You can find hotttest songs near your position!!!  
 
 ## Dependency
 - hdf5
