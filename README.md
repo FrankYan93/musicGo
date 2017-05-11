@@ -14,7 +14,7 @@
 6. build elasticsearch as mentioned in **Build Elasticsearch**
 7. `python query.py`
 
-## Date
+## Latest Modify Date
 **May 10th 2017**
 
 ## Resources
@@ -28,7 +28,6 @@
 - PyTables
 - elasticsearch_dsl
 - elasticsearch
-- flask_paginate
 - json
 - math
 - re

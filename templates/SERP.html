@@ -22,18 +22,18 @@
 
       <div class="well"  data-toggle="modal" data-target="#myModal{{ i }}">
         <font size="3" face="verdana">
-         {{ i+1 }} <sup>th</sup>
-        <a href=#>{{results[i][1]['title']}}  </a>
+
+        {{ i+1 }} <sup>th</sup>
+        <a href="{{baseurl}}query/{{results[i][0]}}">{{results[i][1]['title']}}</a>
         <font size="2" face="verdana" color=grey>@{{results[i][1]['artist_name']}}</font>
+
         </font>
          <p>
                Lyrics: <br>
                {{results[i][1]['lyric'][0:50]}}
                ...
          </p>
-         <p>
-           <a href="./more/{{i}}"><button type="button" name="mlt" class="btn btn-default">more like this</button></a>
-         </p>
+
      </div>
 
 
@@ -52,7 +52,7 @@
                      </p>
                  </div>
                  <div class="modal-footer">
-                   <a href="./more/{{i}}"><button type="button" name="mlt" class="btn btn-default">more like this</button></a>
+                   <a href="{{baseurl}}query/more/{{i}}"><button type="button" name="mlt" class="btn btn-default">more like this</button></a>
                  </div>
              </div>
          </div>

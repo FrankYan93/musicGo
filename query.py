@@ -54,27 +54,36 @@ def entryPage():
 
 @app.route('/query/<k>')
 def article(k):
-    # return render_template('target_article.html',article=the_corpus[k])
     # print "cache:",cache
     return render_template("target_article.html", table=Markup(json2html.convert(cache[k.encode('utf-8')])))
 
 @app.route('/query', methods=['GET'])
 def sortby():
     # print "request.args",request.args
-    if 'hot' in request.args:
-        print 'hot'
-        return newQuery(request, 'hot')
-    elif 'dance' in request.args:
-        print 'dance'
-        return newQuery(request, 'dance')
+    if 'more' not in session:
+        if 'hot' in request.args:
+            print 'hot'
+            return newQuery(request, 'hot')
+        elif 'dance' in request.args:
+            print 'dance'
+            return newQuery(request, 'dance')
+        else:
+            return "invalid url or not required parameters"
     else:
-        return "invalid url or not required parameters"
+        if 'hot' in request.args:
+            print 'hot'
+            return moreLikeThisQuery('hot')
+        elif 'dance' in request.args:
+            print 'dance'
+            return moreLikeThisQuery('dance')
+        else:
+            return "invalid url or not required parameters"
 
 
 @app.route('/query/', methods=['POST', 'GET'])
 def query():
     if 'docId' in session and session['docId']:
-        return moreLikeThis()
+        return moreLikeThisQuery()
 
     page = request.args.get('page', type=int, default=1)
     # print 'page:', page
@@ -85,7 +94,6 @@ def query():
             for i in set(session['recentResultIds']):
                 results[i] = the_corpus[i]
                 results[i]['lyric'] = nl2br(results[i]['original_lyrics'])
-        # pagination = Pagination(page=page, total=len(results), per_page=10, prev_label='Prev', next_label='Next', css_framework='foundation')
         return render_template('SERP.html', results=list(results.iteritems()), noMatch=False, page=page, per_page=10, score=session['resultScore'], baseurl=baseurl)
     return newQuery(request)
 
@@ -100,33 +108,27 @@ def moreLikeThis(k):
     return redirect(url_for('query'), code=307)
 
 
-def moreLikeThis():
-    cache.clear()
-    results = []
-    page = 1
-    # clear session when post
-    session['resultScore'] = None
-    session['recentResultIds'] = None
-    # qDict = {'album':u'',
-    #         'max_longitude':u'',
-    #         'min_longitude':u'',
-    #         'description':u'',
-    #         'title':u'',
-    #         'artist_name':u'',
-    #         'min_latitude':u'',
-    #         'lyric':u'',
-    #         'max_duration':u'',
-    #         'year':u'',
-    #         'genre':u'',
-    #         'min_duration':u'',
-    #         'max_latitude':u'',
-    #         'artist_location':u''}
-    response = search_track(session['docId'])
-    del session['docId']
+def moreLikeThisQuery(flag = None):
+    if not flag:
+        cache.clear()
+        results = []
+        page = 1
+        # clear session when post
+        session['resultScore'] = None
+        session['recentResultIds'] = None
+        response = search_track(session['docId'])
+        session['latesetDocId'] = session['docId']
+        session['more'] = 1
+        del session['docId']
+    else:
+        response = search_track(session['latesetDocId'])
     return getResult(response)
 
 
+
 def newQuery(request, flag=None):
+    if 'more' in session:
+        del session['more']
     if not flag:
         cache.clear()
         # clear session when post
@@ -168,11 +170,24 @@ def getResult(response):
         for i in results:
             i[1]['lyric'] = nl2br(i[1]['lyric'])
             cache[i[0].encode('utf-8')] = json.dumps(i[1].to_dict())
-        # limit 10 per page
-        # pagination = Pagination(page=page, total=resultLen, per_page=10, prev_label='Prev', next_label='Next', css_framework='foundation')
         return render_template('SERP.html', results=results, noMatch=False, page=page, per_page=10, score=session['resultScore'], baseurl=baseurl)
 
 
 app.secret_key = '\x1a\xb0\x06\x8c\xc4+\xb1\xdbm\xe1t?\xad\x14\xd5\xb1\xf8,\x1e\xa2\x82\xd3\xc7\x96'
 if __name__ == "__main__":
     app.run(debug=True)
+
+        # qDict = {'album':u'',
+        #         'max_longitude':u'',
+        #         'min_longitude':u'',
+        #         'description':u'',
+        #         'title':u'',
+        #         'artist_name':u'',
+        #         'min_latitude':u'',
+        #         'lyric':u'',
+        #         'max_duration':u'',
+        #         'year':u'',
+        #         'genre':u'',
+        #         'min_duration':u'',
+        #         'max_latitude':u'',
+        #         'artist_location':u''}
