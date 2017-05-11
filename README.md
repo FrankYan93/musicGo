@@ -56,7 +56,10 @@
 - math
 - redis
 
-## Corpus Sourse
+## Code submitted by
+Jiadong Yan
+
+## Corpus Source
 - https://labrosa.ee.columbia.edu/millionsong/
 - https://www.musixmatch.com/
 
