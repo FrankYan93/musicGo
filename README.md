@@ -66,8 +66,8 @@
 }
 
 ## Build Elasticsearch
-- `cp name_syn.txt [your elasticsearch path]/config/name_syn.txt`
-- `cp cat_syn.txt [your elasticsearch path]/config/cat_syn.txt`   
+- `cp name_syn.txt [your elasticsearch path]/config/name_syn.txt`(need to cd to lib directory)
+- `cp cat_syn.txt [your elasticsearch path]/config/cat_syn.txt`(need to cd to lib directory)   
 (It is not recommended, but if you really want to let your web application access a folder outside its deployment directory. You need to add permission in java.policy file. Details see http://stackoverflow.com/questions/10454037/java-security-accesscontrolexception-access-denied-java-io-filepermission)
 - open elasticsearch server:
   `cd elasticsearch-<version>  
