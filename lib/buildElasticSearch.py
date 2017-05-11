@@ -3,6 +3,8 @@ from Track import *
 from elasticsearch import *
 import json
 import re
+import datetime
+
 
 def import_dict (path):
     json_file = open(path, 'r')
@@ -58,5 +60,9 @@ def build(json_path):
     helpers.bulk(es,  (d.to_dict(include_meta=True) for d in track_list ))
 
 if __name__ == '__main__':
+    t1 = datetime.datetime.now()
     json_path = "music_corpus.json"
     build(json_path)
+    t2 = datetime.datetime.now()
+
+    print t2 - t1
