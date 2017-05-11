@@ -1,8 +1,8 @@
 # musicGo  
 ## Author
-**Jiadong Yan**  
-**Jiaming Xu**  
-**Xinyi Jiang**  
+**[Jiadong Yan](https://github.com/FrankYan93)**  
+**[Jiaming Xu](https://github.com/Dragoncell)**  
+**[Xinyi Jiang](https://github.com/xyjiang94)**  
 
 ## Getting Started
 0. install homebrew
@@ -15,8 +15,12 @@
 7. `python query.py`
 
 ## Date
+**May 10th 2017**
+
 ## Resources
+
 ## Functionality
+
 ## Dependency
 - hdf5
 - Cython
@@ -29,12 +33,10 @@
 - math
 - re
 
-## new
-
-##
-getCorpus.py:  get raw information from hdf5 file   ==> raw_music_corpus.json
-getlyrics.py: get lyrics information according to train data.txt file  ==> music_corpus.json
-mxm.py: get lyrics information and genre information using API to MXM website ==> new_music_corpus.json
+## Corpus
+- getCorpus.py:  get raw information from hdf5 file   ==> raw_music_corpus.json
+- getlyrics.py: get lyrics information according to train data.txt file  ==> music_corpus.json
+- mxm.py: get lyrics information and genre information using API to MXM website ==> new_music_corpus.json
 
 ## Corpus format (1000 songs from Hdf5 file)
 {"1":{  
@@ -70,4 +72,5 @@ mxm.py: get lyrics information and genre information using API to MXM website ==
   ./bin/elasticsearch`  
 
 - run `python ./lib/buildElaticSearch.py`
+- build time: 9s
 - use another terminal to run `redis-server`
