@@ -4,76 +4,75 @@
 
 <body>
 
- <div class="container theme-showcase" role="main">
-    <br>    <br>    <br>
-      <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Sort By
+    <div class="container theme-showcase" role="main">
+        <br> <br> <br>
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Sort By
           <span class="caret"></span></button>
-        <ul class="dropdown-menu">
-          <li><a href="{{baseurl}}query?hot=0">hotness</a></li>
-          <li><a href="{{baseurl}}query?dance=0">danceability</a></li>
-        </ul>
-      </div>
-      <br>
+            <ul class="dropdown-menu">
+                <li><a href="{{baseurl}}query?hot=0">hotness</a></li>
+                <li><a href="{{baseurl}}query?dance=0">danceability</a></li>
+            </ul>
+        </div>
+        <br> {% for i in range(0,results|length): %}
+        <!-- <p>Document Number:{{k}}</p> -->
+
+        <div class="well" data-toggle="modal" data-target="#myModal{{ i }}">
+            <font size="3" face="verdana">
+
+                {{ i+1 }} <sup>th</sup>
+                <a href=#>{{results[i][1]['title']}}</a>
+                <font size="2" face="verdana" color=grey>@{{results[i][1]['artist_name']}}</font>
+
+            </font>
+            <p>
+                Lyrics: <br> {{results[i][1]['lyric'][0:50]}} ...
+            </p>
+
+        </div>
 
 
-
-      {% for i in range(0,results|length): %} <!-- <p>Document Number:{{k}}</p> -->
-
-      <div class="well"  data-toggle="modal" data-target="#myModal{{ i }}">
-        <font size="3" face="verdana">
-
-        {{ i+1 }} <sup>th</sup>
-        <a href=#>{{results[i][1]['title']}}</a>
-        <font size="2" face="verdana" color=grey>@{{results[i][1]['artist_name']}}</font>
-
-        </font>
-         <p>
-               Lyrics: <br>
-               {{results[i][1]['lyric'][0:50]}}
-               ...
-         </p>
-
-     </div>
-
-
-     <div class="modal fade" id="myModal{{ i }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-         <div class="modal-dialog" role="document">
-             <div class="modal-content">
-                 <div class="modal-header">
-                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <div class="modal fade" id="myModal{{ i }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                          <span aria-hidden="true">&times;</span>
                      </button>
-                     <h2 class="modal-title" id="myModalLabel">{{results[i][1]['title']}}</h2>
-                 </div>
-                 <div class="modal-body">
-                     <p>
-                         {{results[i][1]['lyric']}}
-                     </p>
-                 </div>
-                 <div class="modal-footer">
-                   <a href="{{baseurl}}query/more/{{i}}"><button type="button" name="mlt" class="btn btn-default">more like this</button></a>
-                 </div>
-             </div>
-         </div>
-     </div>
+                        <h2 class="modal-title" id="myModalLabel">{{results[i][1]['title']}}</h2>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            {{results[i][1]['lyric']}}
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="{{baseurl}}query/more/{{i}}"><button type="button" name="mlt" class="btn btn-default">more like this</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
-     {% endfor %}
-
-
-
+        {% endfor %}
 
 
 
-  </div>
 
 
 
-  <script type="text/javascript">
-      $(".comment").shorten({"showChars": 450});
-      $(document).ready(function() {$(".comment").shorten();});
-  </script>
+    </div>
+
+
+
+    <script type="text/javascript">
+        $(".comment").shorten({
+            "showChars": 450
+        });
+        $(document).ready(function() {
+            $(".comment").shorten();
+        });
+    </script>
 
 
 
