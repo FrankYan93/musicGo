@@ -23,7 +23,7 @@
       <div class="well"  data-toggle="modal" data-target="#myModal<%= @i %>">
         <font size="3" face="verdana">
         <strong>  {{ i+1 }} <sup>th</sup> </strong>
-        <a href={{ "./"+results[i][0]}}><strong>{{results[i][1]['title']}}</strong></a>
+        <a href="{{baseurl}}query/{{results[i][0]}}"><strong>{{results[i][1]['title']}}</strong></a>
         </font>
         <p>
              <font size="2" face="verdana" color=grey>
@@ -37,7 +37,7 @@
            </div>
          </p>
          <p>
-           <a href="./more/{{i}}"><button type="button" name="mlt" class="btn btn-default">more like this</button></a>
+           <a href="{{baseurl}}query/more/{{i}}"><button type="button" name="mlt" class="btn btn-default">more like this</button></a>
          </p>
      </div>
 
