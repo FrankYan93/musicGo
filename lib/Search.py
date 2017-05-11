@@ -92,7 +92,7 @@ def search(d_query,flag = 'none'):
     return results
 
 
-def build_track_qurey(s,track_id):
+def build_track_qurey(s,track_id,flag):
     queries = []
     track = Track.get(id=track_id)
     description = track.title + track.lyric
@@ -102,18 +102,28 @@ def build_track_qurey(s,track_id):
         s = s.query(Q('bool', **{
                 'should': queries
             }))
+
+    if flag == 'hot':
+        s = s.sort(
+        { "song_hotttnesss" : "desc" }
+        )
+    elif flag == 'dance':
+        s = s.sort(
+        { "danceability" : "desc" }
+        )
+
     corpusSize = 40
     s = s[:corpusSize]  # limit size
     s = s.highlight("*", fragment_size=99999999,
                               pre_tags='<z>', post_tags='</z>')
     return s
 
-def search_track(track_id):
+def search_track(track_id,flag = 'none'):
     connections.create_connection(hosts=['localhost'])
     Track.init()
 
     s = Track.search()
-    s = build_track_qurey(s,track_id)
+    s = build_track_qurey(s,track_id,flag)
 
     results = s.execute()
     return results
@@ -133,10 +143,10 @@ if __name__ == '__main__':
     #         'genre': u'','min_duration': u'','max_latitude': u'','artist_location': u''}
 
 
-    res = search({'description': u'love'},'hot')
+    # res = search({'description': u'love'},'hot')
 
     # print len(res) ,'\n\n\n',res[0].meta.id
-    # res = search_track(5883)
+    res = search_track(5883,'hot')
     print len(res) ,'\n\n\n',res[0].meta.id
     for song in res:
         print song.song_hotttnesss
