@@ -121,7 +121,7 @@ def moreLikeThisQuery(flag = None):
         session['more'] = 1
         del session['docId']
     else:
-        response = search_track(session['latesetDocId'])
+        response = search_track(session['latesetDocId'],flag)
     return getResult(response)
 
 
