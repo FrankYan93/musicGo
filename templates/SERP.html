@@ -29,10 +29,7 @@
     <ul class="card__list">
       </br>
       </br>
-      {% if noMatch: %} {% if not invalid: %}
-      <h2>No Results! Try again!</h2> {% else: %}
-      <h2>Unknown search term:{% for e in invalid: %}<em>{{e}} </em>{% endfor %}</h2> {% endif %} {% else: %}
-      <h2>Here are the results:</h2>
+
       <div class="dropdown">
         <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Sort By
           <span class="caret"></span></button>
@@ -41,8 +38,8 @@
           <li><a href="{{baseurl}}query?dance=0">danceability</a></li>
         </ul>
       </div>
-      {% if results|length
-      <=page*per_page %} {% for i in range((page-1)*per_page,results|length): %} <!-- <p>Document Number:{{k}}</p> -->
+
+      {% for i in range(0,results|length): %} <!-- <p>Document Number:{{k}}</p> -->
 
         <li class="card__item card__item--blue">
           <div class="card__info">
@@ -57,30 +54,10 @@
             </div>
           </div>
         </li>
-        </br>
-        </br>
     </ul>
 
 
-    {% endfor %} {% else: %} {% for i in range((page-1)*per_page,page*per_page): %}
-    <li class="card__item card__item--blue">
-      <div class="card__info">
-        <div class="info-player">
-          <p class="info-player__num">{{ i+1 }}</p>
-          <p class="info-player__name"><a href={{ "./"+results[i][0]}}><strong>{{results[i][1]['title']}}</strong></a></p>
-          <p class="info-player__name">
-            <small>{{results[i][1]['lyric']}}</small>
-          </p>
-          <a href="./more/{{i}}"><button type="button" name="mlt" class="btn btn-primary">more like this</button></a>
-
-
-        </div>
-      </div>
-    </li>
-    </br>
-    </br>
-    </ul>
-    {% endfor %} {% endif %} {% endif %}
+    {% endfor %}
   </div>
 
 
