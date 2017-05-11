@@ -60,7 +60,7 @@ def article(k):
 
 @app.route('/query', methods=['GET'])
 def sortby():
-    print "request.args",request.args
+    # print "request.args",request.args
     if 'hot' in request.args:
         print 'hot'
         return newQuery(request, 'hot')
@@ -142,7 +142,6 @@ def newQuery(request, flag=None):
 
 
 def getResult(response):
-    print 145
     results = []
     page = 1
     if response:
